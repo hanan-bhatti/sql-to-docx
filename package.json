@@ -1,0 +1,169 @@
+{
+  "name": "sql-to-docx",
+  "displayName": "SQL to DOCX Exporter",
+  "description": "Execute SQL queries and export results to beautifully formatted DOCX documents",
+  "version": "1.0.0",
+  "publisher": "your-publisher-name",
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/sql-to-docx"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/sql-to-docx/issues"
+  },
+  "homepage": "https://github.com/your-username/sql-to-docx#readme",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Data Science",
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "sql",
+    "mssql",
+    "sqlserver",
+    "docx",
+    "export",
+    "database",
+    "query",
+    "documentation"
+  ],
+  "activationEvents": [
+    "onLanguage:sql",
+    "onCommand:sqlToDocx.runAllQueries",
+    "onCommand:sqlToDocx.runSelectedQuery"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sqlToDocx.runAllQueries",
+        "title": "SQL to DOCX: Export All Queries",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "sqlToDocx.runSelectedQuery",
+        "title": "SQL to DOCX: Export Selected Query",
+        "icon": "$(selection)"
+      },
+      {
+        "command": "sqlToDocx.showOutput",
+        "title": "SQL to DOCX: Show Output",
+        "icon": "$(output)"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorLangId == sql && editorHasSelection",
+          "command": "sqlToDocx.runSelectedQuery",
+          "group": "sqlToDocx@1"
+        },
+        {
+          "when": "editorLangId == sql",
+          "command": "sqlToDocx.runAllQueries",
+          "group": "sqlToDocx@2"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "editorLangId == sql",
+          "command": "sqlToDocx.runAllQueries",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "sqlToDocx.runAllQueries",
+          "when": "editorLangId == sql"
+        },
+        {
+          "command": "sqlToDocx.runSelectedQuery",
+          "when": "editorLangId == sql && editorHasSelection"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "sqlToDocx.runAllQueries",
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e",
+        "when": "editorLangId == sql"
+      },
+      {
+        "command": "sqlToDocx.runSelectedQuery",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorLangId == sql && editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "SQL to DOCX",
+      "properties": {
+        "sqlToDocx.maxRows": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Maximum number of rows to export per query result"
+        },
+        "sqlToDocx.autoAppend": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically append to existing documents instead of overwriting"
+        },
+        "sqlToDocx.showOutputOnError": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically show output channel when errors occur"
+        },
+        "sqlToDocx.dateFormat": {
+          "type": "string",
+          "default": "YYYY-MM-DD",
+          "enum": [
+            "YYYY-MM-DD",
+            "MM/DD/YYYY",
+            "DD/MM/YYYY",
+            "ISO"
+          ],
+          "description": "Format for date values in exported documents"
+        },
+        "sqlToDocx.checkSQLServerStatus": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check if SQL Server is running before executing queries (Windows only)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js",
+    "vscode:prepublish": "npm run package",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile": "webpack",
+    "watch": "webpack --watch"
+  },
+  "dependencies": {
+    "mssql": "^10.0.1",
+    "docx": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.0.0",
+    "@vscode/test-electron": "^2.3.0",
+    "eslint": "^8.50.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "extensionDependencies": [
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mssql"
+  ]
+}
